@@ -7,17 +7,16 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lukash0lm.holmchat.controller.login">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lukash0lm.holmchat.controller.LoginController">
    <children>
       <Button fx:id="LoginButton" layoutX="228.0" layoutY="310.0" mnemonicParsing="false" onAction="#onLoginButtonClicked" text="Login" />
       <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="38.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@logo-transparrent.png" />
+            <Image url="@../logo-transparrent.png" />
          </image>
       </ImageView>
-      <TextField layoutX="76.0" layoutY="172.0" />
-      <TextField layoutX="76.0" layoutY="216.0" />
+      <TextField fx:id="usernameTextField" layoutX="76.0" layoutY="172.0" />
+      <TextField fx:id="passwordTextField" layoutX="76.0" layoutY="216.0" />
       <Text layoutX="5.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:" />
       <Text layoutX="5.0" layoutY="234.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:" />
       <Text layoutX="86.0" layoutY="266.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Don't have an account?" />
