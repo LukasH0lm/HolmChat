@@ -2,15 +2,23 @@ package com.lukash0lm.holmchat.controller;
 
 import com.lukash0lm.holmchat.ControlObjects.User;
 import com.lukash0lm.holmchat.Dao.UserDao;
+import com.lukash0lm.holmchat.HelloApplication;
 import com.lukash0lm.holmchat.utility.PasswordEncryptor;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 
 public class LoginController {
@@ -29,10 +37,74 @@ public class LoginController {
     private Button SignUpButton;
 
     @FXML
-    void SignUpButtonClicked(ActionEvent event) throws Exception {
+    void onLoginButtonClicked(ActionEvent event) throws Exception {
+
+        System.out.println("Login button clicked");
+
+        String username = usernameTextField.getText();
+        String password = passwordTextField.getText();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            Alert.AlertType type = Alert.AlertType.ERROR;
+            Alert alert = new Alert(type, "Please enter a username and password");
+            alert.showAndWait();
+            return;
+        }
+
+        UserDao userDao = new UserDao();
+
+        User user = userDao.getUser(username);
+
+        if (user == null) {
+            Alert.AlertType type = Alert.AlertType.ERROR;
+            Alert alert = new Alert(type, "Username does not exist");
+            alert.showAndWait();
+            return;
+        }
+
+        PasswordEncryptor encryptor = new PasswordEncryptor();
+
+        String salt = user.getSalt();
 
 
-        if (usernameTextField.getText().equals("") || passwordTextField.getText().equals("")) {
+        String encryptedPassword = encryptor.getEncryptedPassword(password, salt);
+
+        //opens chat window
+        if (Objects.equals(encryptedPassword, user.getEncryptedpassword())) {
+            System.out.println("Login successful");
+
+            Stage stage = (Stage) LoginButton.getScene().getWindow();
+
+            FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("view/chat.fxml"));
+
+            Parent root = fxmlLoader.load();
+            ChatController controller = fxmlLoader.<ChatController>getController();
+            controller.setUser(user);
+            Scene scene = new Scene(root);
+
+            stage.setScene(scene);
+
+            stage.show();
+
+
+
+        } else {
+
+            Alert.AlertType type = Alert.AlertType.ERROR;
+            Alert alert = new Alert(type, "Incorrect password"); //TODO: make this more secure, only for testing
+            alert.showAndWait();
+
+        }
+
+    }
+
+
+    @FXML
+    private void SignUpButtonClicked(ActionEvent event) throws Exception {
+
+
+        if (usernameTextField.getText().isEmpty() ||
+                passwordTextField.getText().isEmpty()) {
             Alert.AlertType type = Alert.AlertType.ERROR;
             Alert alert = new Alert(type, "Please enter a username and password");
             alert.showAndWait();
@@ -82,15 +154,6 @@ public class LoginController {
 
     }
 
-    @FXML
-    void onLoginButtonClicked(ActionEvent event) {
 
-        System.out.println("Login button clicked");
-
-
-
-
-
-    }
 
 }
